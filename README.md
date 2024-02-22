@@ -1,3 +1,71 @@
+I need
+- [ ] First figure out how to 
+- [ ] `hash_h` outputs 256-bit (32-byte) hash
+- [ ] `hash_g` outputs 512-bit (64-byte) hash
+- [ ] `xof_absorb` and `xof_squeezeblocks`  
+- [ ] `prf`
+- [ ] `kdf`
+
+All of above can be implemented using ASCON's XOF, only with different inputs, and asking for different sizes of outputs
+
+```c
+/**
+ * Given input bytes, hash into a 32-byte output and write to "out"
+ */
+void hash_h(uint8_t out[32], const uint8_t *in, size_t inlen);
+
+/**
+ * Given input bytes, hash into a 64-byte output and write to "out"
+ */
+void hash_g(uint8_t out[64], const uint8_t *in, size_t inlen);
+
+/**
+ * 
+ */
+void xof_absorb(
+    // Here "state" type depends on the choice of XOF
+    state *xof_state,
+    // KYBER_SYMBYTES is a macro defined in the ref impl to be 32
+    const uint8_t seed[KYBER_SYMBYTES],
+    uint8_t x,
+    uint8_t y
+);
+
+/**
+ * Squeeze n blocks of generated random bytes onto "out"
+ * 
+ * XOF squeezes in blocks (e.g. Shake128 squeezes 168 bytes at a time, AES-256
+ * squeezes 64 bytes at a time)
+ */
+void xof_squeezeblocks(
+    uint8_t *out,
+    size_t nblocks,
+    xof_state *state,
+);
+
+/**
+ * Fill "out" with random bytes using the key and the nonce
+ * 
+ * The Keccak implementation uses Shake256 to squeeze as many blocks as needed
+ * to fill the output
+ */
+void prf(
+    uint8_t *out,
+    size_t outlen,
+    const uint8_t key[KYBER_SYMBYTES],
+    uint_t nonce
+);
+
+/**
+ * write KYBER_SSBYTES bytes to "out" based on the input 
+ */
+void kdf(
+    uint8_t *out,
+    const uint8_t *in,
+    size_t inlen
+);
+```
+
 # 轻量化 Kyber
 基于格的密钥封装机制 Kyber 使用了魔改的藤崎-冈本变化以达成 IND-CCA 安全，所以需要一些对称密码的部件。原作者的标准实现采取了两套对称密码的组合：被 NIST 标准化的组合使用基于 Keccak 的 XOF 和哈希函数，另一组【90年代 Kyber】则使用 AES-256 和 SHA-2。考虑到嵌入式应用的场景，Keccak 的内存用量和计算速度都有很大的改进空间。
 

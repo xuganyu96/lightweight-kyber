@@ -37,11 +37,12 @@ void kyber_asconxof_absorb(
   uint8_t x,
   uint8_t y
 ) {
-  uint8_t buf[KYBER_SYMBYTES + 2];
-  memcpy(&buf, &seed, KYBER_SYMBYTES);
-  buf[KYBER_SYMBYTES] = x;
-  buf[KYBER_SYMBYTES] = y;
-  ascon_absorb(state, buf, KYBER_SYMBYTES);
+  uint8_t extseed[KYBER_SYMBYTES + 2];
+  memcpy(extseed, seed, KYBER_SYMBYTES);
+  extseed[KYBER_SYMBYTES + 0] = x;
+  extseed[KYBER_SYMBYTES + 1] = y;
+  ascon_inithash(state);
+  ascon_absorb(state, extseed, KYBER_SYMBYTES + 2);
 }
 
 /**

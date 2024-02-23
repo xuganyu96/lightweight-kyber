@@ -56,6 +56,7 @@ void kyber_asconxof_squeezeblocks(
   P(state, ASCON_HASH_ROUNDS);
   while (nblocks > 0) {
     STORE(out, state->x[0], ASCON_HASH_RATE);
+    out += ASCON_HASH_RATE;
     P(state, ASCON_HASH_ROUNDS);
     nblocks--;
   }

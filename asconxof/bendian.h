@@ -33,7 +33,7 @@
 #define U16BIG(x) (((0x00FF & (x)) << 8) | ((0xFF00 & (x)) >> 8))
 
 #else
-#error "Ascon byte order macros not defined in endian.h"
+#error "Ascon byte order macros not defined in bendian.h"
 #endif
 
 #endif /* ENDIAN_H_ */

@@ -10,7 +10,6 @@ test_kyber1024
 test_kyber1024-90s
 test_kyber512
 test_kyber512-90s
-test_kyber512-ascon
 test_kyber768
 test_kyber768-90s
 test_speed1024
@@ -25,6 +24,18 @@ test_vectors512
 test_vectors512-90s
 test_vectors768
 test_vectors768-90s
+test_kyber512-ascon
+test_kyber768-ascon
+test_kyber1024-ascon
+test_kex512-ascon
+test_kex768-ascon
+test_kex1024-ascon
+test_vectors512-ascon
+test_vectors768-ascon
+test_vectors1024-ascon
+test_speed512-ascon
+test_speed768-ascon
+test_speed1024-ascon
 PQCgenKAT_kem512
 PQCgenKAT_kem768
 PQCgenKAT_kem1024

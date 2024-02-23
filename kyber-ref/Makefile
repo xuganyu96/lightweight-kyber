@@ -7,9 +7,11 @@ RM = /bin/rm
 SOURCES = kex.c kem.c indcpa.c polyvec.c poly.c ntt.c cbd.c reduce.c verify.c
 SOURCESKECCAK = $(SOURCES) fips202.c symmetric-shake.c
 SOURCESNINETIES = $(SOURCES) sha256.c sha512.c aes256ctr.c symmetric-aes.c
+SOURCESASCON = $(SOURCES) symmetric-ascon.c ascon/hash.c ascon/permutations.c ascon/printstate.c
 HEADERS = params.h kex.h kem.h indcpa.h polyvec.h poly.h ntt.h cbd.h reduce.c verify.h symmetric.h
 HEADERSKECCAK = $(HEADERS) fips202.h
 HEADERSNINETIES = $(HEADERS) aes256ctr.h sha2.h
+HEADERSASCON = $(HEADERS) ascon/api.h ascon/ascon.h ascon/bendian.h ascon/config.h ascon/constants.h ascon/permutations.h ascon/printstate.h ascon/round.h ascon/word.h
 
 .PHONY: all speed shared clean
 
@@ -26,6 +28,7 @@ all: \
   test_kyber512-90s \
   test_kyber768-90s \
   test_kyber1024-90s \
+  test_kyber512-ascon \
   test_kex512-90s \
   test_kex768-90s \
   test_kex1024-90s \
@@ -33,6 +36,7 @@ all: \
   test_vectors768-90s \
   test_vectors1024-90s
 
+# TODO: add speed test
 speed: \
   test_speed512 \
   test_speed768 \
@@ -123,6 +127,9 @@ test_kyber768-90s: $(SOURCESNINETIES) $(HEADERSNINETIES) test_kyber.c randombyte
 
 test_kyber1024-90s: $(SOURCESNINETIES) $(HEADERSNINETIES) test_kyber.c randombytes.c
 	$(CC) $(CFLAGS) -D KYBER_90S -DKYBER_K=4 $(SOURCESNINETIES) randombytes.c test_kyber.c -o test_kyber1024-90s
+
+test_kyber512-ascon: $(SOURCESASCON) $(HEADERSASCON) test_kyber.c randombytes.c
+	$(CC) $(CFLAGS) -D KYBER_ASCON -DKYBER_K=2 $(SOURCESASCON) randombytes.c test_kyber.c -o test_kyber512-ascon
 
 test_kex512-90s: $(SOURCESNINETIES) $(HEADERSNINETIES) test_kex.c randombytes.c
 	$(CC) $(CFLAGS) -D KYBER_90S -DKYBER_K=2 $(SOURCESNINETIES) randombytes.c test_kex.c -o test_kex512-90s

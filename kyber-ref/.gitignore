@@ -10,6 +10,7 @@ test_kyber1024
 test_kyber1024-90s
 test_kyber512
 test_kyber512-90s
+test_kyber512-ascon
 test_kyber768
 test_kyber768-90s
 test_speed1024

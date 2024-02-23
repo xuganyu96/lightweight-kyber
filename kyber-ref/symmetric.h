@@ -31,6 +31,45 @@ void kyber_aes256ctr_prf(uint8_t *out, size_t outlen, const uint8_t key[32], uin
 #define prf(OUT, OUTBYTES, KEY, NONCE) kyber_aes256ctr_prf(OUT, OUTBYTES, KEY, NONCE)
 #define kdf(OUT, IN, INBYTES) sha256(OUT, IN, INBYTES)
 
+#elif defined KYBER_ASCON
+#include "ascon/ascon.h"
+#include "ascon/constants.h"
+
+typedef ascon_state_t xof_state;
+
+void asconxof_hash256(uint8_t out[32], const uint8_t *in, size_t inlen);
+void asconxof_hash512(uint8_t out[64], const uint8_t *in, size_t inlen);
+void kyber_asconxof_absorb(
+    ascon_state_t *state,
+    const uint8_t seed[KYBER_SYMBYTES],
+    uint8_t x,
+    uint8_t y
+);
+void kyber_asconxof_squeezeblocks(
+    uint8_t *out,
+    size_t nblocks,
+    ascon_state_t *state
+);
+void kyber_asconxof_prf(
+    uint8_t *out,
+    size_t outlen,
+    const uint8_t key[KYBER_SYMBYTES],
+    uint8_t nonce
+);
+void kyber_asconxof_kdf(
+    uint8_t *out,
+    const uint8_t *in,
+    size_t inlen
+);
+
+#define XOF_BLOCKBYTES ASCON_HASH_RATE
+#define hash_h(OUT, IN, INBYTES) asconxof_hash256(OUT, IN, INBYTES)
+#define hash_g(OUT, IN, INBYTES) asconxof_hash512(OUT, IN, INBYTES)
+#define xof_absorb(STATE, SEED, X, Y) kyber_asconxof_absorb(STATE, SEED, X, Y)
+#define xof_squeezeblocks(OUT, OUTBLOCKS, STATE) kyber_asconxof_squeezeblocks(OUT, OUTBLOCKS, STATE)
+#define prf(OUT, OUTBYTES, KEY, NONCE) kyber_asconxof_prf(OUT, OUTBYTES, KEY, NONCE)
+#define kdf(OUT, IN, INBYTES) kyber_asconxof_kdf(OUT, IN, INBYTES)
+
 #else
 
 #include "fips202.h"

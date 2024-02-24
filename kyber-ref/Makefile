@@ -246,6 +246,18 @@ clean:
 	-$(RM) -rf test_speed512-90s
 	-$(RM) -rf test_speed768-90s
 	-$(RM) -rf test_speed1024-90s
+	-$(RM) -rf test_kyber512-ascon
+	-$(RM) -rf test_kyber768-ascon
+	-$(RM) -rf test_kyber1024-ascon
+	-$(RM) -rf test_kex512-ascon
+	-$(RM) -rf test_kex768-ascon
+	-$(RM) -rf test_kex1024-ascon
+	-$(RM) -rf test_vectors512-ascon
+	-$(RM) -rf test_vectors768-ascon
+	-$(RM) -rf test_vectors1024-ascon
+	-$(RM) -rf test_speed512-ascon
+	-$(RM) -rf test_speed768-ascon
+	-$(RM) -rf test_speed1024-ascon
 	-$(RM) -rf PQCgenKAT_kem512
 	-$(RM) -rf PQCgenKAT_kem768
 	-$(RM) -rf PQCgenKAT_kem1024

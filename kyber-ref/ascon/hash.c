@@ -77,13 +77,4 @@ void ascon_squeeze(ascon_state_t* s, uint8_t* out,
   printstate("squeeze output", s);
 }
 
-int crypto_hash(unsigned char* out, const unsigned char* in,
-                unsigned long long inlen) {
-  ascon_state_t s;
-  ascon_inithash(&s);
-  ascon_absorb(&s, in, inlen);
-  ascon_squeeze(&s, out, CRYPTO_BYTES);
-  return 0;
-}
-
 #endif

@@ -1,8 +1,14 @@
-# 快速入门
+# 快速上手
 ```bash
 cd kyber-ref
+
+# 正确性测试
 make
 ./test_kyber512-ascon
+
+# 性能测试
+make speed
+./test_speed512-ascon
 ```
 
 如果在 Apple Silicon 上编译 speed 测试，则需要修改 `cpucycles.h` 让编译器使用 ARM 的编汇语言

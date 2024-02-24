@@ -45,8 +45,6 @@ all: \
   test_vectors768-ascon \
   test_vectors1024-ascon
 
-
-
 speed: \
   test_speed512 \
   test_speed768 \

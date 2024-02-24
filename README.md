@@ -5,6 +5,8 @@ make
 ./test_kyber512-ascon
 ```
 
+如果在 Apple Silicon 上编译 speed 测试，则需要修改 `cpucycles.h` 让编译器使用 ARM 的编汇语言
+
 # 轻量化 Kyber
 基于格的密钥封装机制 Kyber 使用了魔改的藤崎-冈本变化以达成 IND-CCA 安全，所以需要一些对称密码的部件。原作者的标准实现采取了两套对称密码的组合：被 NIST 标准化的组合使用基于 Keccak 的 XOF 和哈希函数，另一组【90年代 Kyber】则使用 AES-256 和 SHA-2。考虑到嵌入式应用的场景，Keccak 的内存用量和计算速度都有很大的改进空间。
 

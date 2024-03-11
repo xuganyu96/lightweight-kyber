@@ -39,7 +39,17 @@ def decapsulate(sk: CPAPKE.SecretKey, ct: Ciphertext) -> SharedSecret:
 If security is not non-negligibly affected, then this scheme trades ciphertext size (increased by the size of a tag) for faster decapsulation (computes MAC instead of CPAPKE.encrypt).
 
 ## Security definition for KEM
+The security definitions of KEM are similar to those of a public-key encryption scheme. The main difference lies in the function signature of the "encapsulation" routine, which does not take a plaintext as an input. Instead, the source material for the shared secret is likely generated from within the routine itself. The IND-CPA game for a KEM is as follows:
 
+1. Challenger generates keypair $\text{pk}, \text{sk} \leftarrow \text{KEM.KeyGen}(1^\lambda)$
+1. Adversary receives $\text{pk}$ and can perform the encapsulation routine on its own
+1. Challenger calls `KEM.Encapsulate`, which returns a challenge ciphertext $\text{ct}^\ast$ and a shared secret $\text{ss}^\ast$
+1. Challnger flips a coin $b^\ast \leftarrow \{0,1\}$. If $b^\ast = 0$, then $\text{ss}^\ast$ is replaced with a truly random sample
+1. Adversary receives the ciphertext and the shared secret, then outputs $b \in \{0, 1\}$
+
+The adversary wins if $b = b^\ast$.
+
+The IND-CCA game is identical to the IND-CPA game, except for that the adversary has access to a decapsulation oracle $\mathcal{O}_D$. $\mathcal{O}_D$ can receive ciphertexts and return the decapsulated shared secret, but not the challenge ciphertext after it has been generated
 
 ## Sequence of games
 **Game 0** is the KEM-IND-CCA game described [above](#security-definition-for-kem).
@@ -71,9 +81,8 @@ When all decapsulation queries are honest, game 0 and game 1 are identical (decr
 
 $$
 \begin{aligned}
-P[\text{wins $G_0$}] - P[\text{wins $G_1$}] \\
-&= P[\text{wins $G_0$ } \cap \text{ at least one almost valid}] \\
-&- P[\text{wins $G_1$ } \cap \text{ at least one almost valid}] \\
+&P[\text{wins $G_0$}] - P[\text{wins $G_1$}] \\
+&= P[\text{wins $G_0$ } \cap \text{ at least one almost valid}] - P[\text{wins $G_1$ } \cap \text{ at least one almost valid}] \\
 &\leq P[\text{at least one almost valid}] - 0 \\
 &= P[\text{at least one almost valid}]
 \end{aligned}
